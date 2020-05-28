@@ -18,4 +18,8 @@ urlpatterns = [
     path('update_order/<str:order_pk>', views.updateOrder, name= 'update_order'),
 
     path('delete_order/<str:order_pk>', views.deleteOrder, name = 'delete_order'),
+
+    path ('register', views.registerUser, name = 'registration'),
+
+    path('login', views.loginUser, name = 'login'),
 ]
