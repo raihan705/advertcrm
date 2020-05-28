@@ -1,0 +1,53 @@
+{% extends 'accounts/main.html' %}
+
+ {% block title %}
+
+    <title> Order form </title>
+
+ {% endblock title %}
+
+ {% block content %}
+
+   <div class = "row">
+
+      <div class = "col-md-8">
+
+         <div class = "card card-body">
+
+            <form action ="" method = "POST">
+
+               {% csrf_token %}
+
+               {{ form.management_form }}
+
+               {% for form in form  %}
+
+               
+               
+                  {{form}}
+
+                  <hr>
+               
+               {% endfor %}
+
+               
+
+               <a href="#"><button class="btn btn-sm btn-primary" type="submit">Submit</button></a>
+
+         
+
+            </form>
+
+
+
+         </div>
+
+      </div>
+
+   </div>
+
+    
+ {% endblock content %}
+
+    
+
