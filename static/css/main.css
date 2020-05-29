@@ -16,3 +16,9 @@ body{
 
     background-color: rgb(255, 47, 47);
 }
+
+.navusernamelogout{
+    font-size: large;
+    color: aliceblue;
+    margin-right: 20px;
+}

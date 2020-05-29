@@ -1,5 +1,15 @@
 {% load static %}
 
+<style>
+
+.navusernamelogout{
+    font-size: large;
+    color: aliceblue;
+    margin-right: 25px;
+}
+
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="#"><img src=" {% static 'images/logo.png' %} " alt="Logo" height="35" width="35"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,4 +26,7 @@
       
     </ul>
   </div>
+
+  <span class ="navusernamelogout"> {{request.user}} </span>
+  <span> <a class ="navusernamelogout" href = "  {% url 'logout' %} "  > Logout </a></span>
 </nav>

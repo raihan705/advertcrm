@@ -1,6 +1,10 @@
 from django.forms import ModelForm
 from accounts.models import Order
 
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django import forms
+
 
 class OrderForm(ModelForm):
 
@@ -8,3 +12,9 @@ class OrderForm(ModelForm):
         model = Order
 
         fields = '__all__'
+
+
+class UserRegistrationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
