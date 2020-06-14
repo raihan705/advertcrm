@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 
 
@@ -12,12 +13,13 @@ from accounts.models import *
 from accounts.filters import OrderFilter
 
 from accounts.forms import OrderForm, UserRegistrationForm
-from accounts.decorators import unauthenticated_user
+from accounts.decorators import unauthenticated_user, allowed_user,admin_only
 
 # Create your views here.
 
 
-@ login_required(login_url= 'login')
+@login_required(login_url= 'login')
+@admin_only
 def home(request):
 
     # for customer table from database tendering all  data
@@ -49,9 +51,10 @@ def userpage(request):
     return render(request, 'accounts/userpage.html', context)
 
 
-    
+
 
 @ login_required(login_url= 'login')
+@allowed_user(allowed_roles=['admin'])
 def products(request):
 
     product = Product.objects.all()
@@ -59,6 +62,7 @@ def products(request):
 
 
 @ login_required(login_url= 'login')
+@allowed_user(allowed_roles=['admin'])
 def customer(request,customer_pk):
 
     #get a single customer info
@@ -84,6 +88,7 @@ def customer(request,customer_pk):
     return render(request, 'accounts/customer.html',context)
 
 @ login_required(login_url= 'login')
+@allowed_user(allowed_roles=['admin'])
 def createOrder(request,customer_pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields= ('product','status'), extra=4)
     name=Customer.objects.get(pk=customer_pk)
@@ -108,6 +113,7 @@ def createOrder(request,customer_pk):
 
 
 @ login_required(login_url= 'login')
+@allowed_user(allowed_roles=['admin'])
 def updateOrder(request,order_pk):
 
     order_id = Order.objects.get(pk=order_pk)
@@ -131,6 +137,7 @@ def updateOrder(request,order_pk):
 
 
 @ login_required(login_url= 'login')
+@allowed_user(allowed_roles=['admin'])
 def deleteOrder(request,order_pk):
     item= Order.objects.get(pk=order_pk)
 
@@ -158,12 +165,15 @@ def registerUser(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            
 
             # for getting Username for messages
 
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Accoutn is created successfully for ' + user)
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name = 'customer')
+            user.groups.add(group)
+            messages.success(request, 'Accoutn is created successfully for ' + username)
             return redirect('login')
 
     context = {

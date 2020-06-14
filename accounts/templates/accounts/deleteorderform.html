@@ -1,3 +1,14 @@
+
+<style>
+
+    .delete-page-design{
+
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+</style>
+
 {% extends 'accounts/main.html' %}
 
  {% block title %}
@@ -8,28 +19,32 @@
 
  {% block content %}
 
-    <form action="{% url 'delete_order' item.id %}" method="POST">
+    <div class= "delete-page-design">
 
-        {% csrf_token %}
+        <form action="{% url 'delete_order' item.id %}" method="POST">
 
-        <div class="card">
-  
-            <div class="card-body">
-                <h5 class="card-title">Are you sure, you want to delete this item : {{item}} </h5>
+            {% csrf_token %}
 
-                <br>
+            <div class="card">
+    
+                <div class="card-body">
+                    <h5 class="card-title">Are you sure, you want to delete this item : {{item}} </h5>
 
-                <a href="{% url 'home' %}" class="btn btn-primary">Cancle</a>
+                    <br>
 
-                <button type="submit" class="btn btn-danger">Confirm</button>
-                
+                    <a href="{% url 'home' %}" class="btn btn-primary">Cancle</a>
+
+                    <button type="submit" class="btn btn-danger">Confirm</button>
+                    
+                </div>
             </div>
-        </div>
 
-        
-
+            
 
 
-    </form>
+
+        </form>
+
+    </div>
 
  {% endblock content %}
