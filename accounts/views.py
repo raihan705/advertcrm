@@ -12,6 +12,7 @@ from accounts.models import *
 from accounts.filters import OrderFilter
 
 from accounts.forms import OrderForm, UserRegistrationForm
+from accounts.decorators import unauthenticated_user
 
 # Create your views here.
 
@@ -38,6 +39,17 @@ def home(request):
      'total_delivered':total_delivered }
 
     return render(request, 'accounts/dashboard.html',context)
+
+
+def userpage(request):
+    context  = {
+
+    }
+
+    return render(request, 'accounts/userpage.html', context)
+
+
+    
 
 @ login_required(login_url= 'login')
 def products(request):
@@ -137,63 +149,57 @@ def deleteOrder(request,order_pk):
 
     return render(request, 'accounts/deleteorderform.html',context)
 
-
+@unauthenticated_user
 def registerUser(request):
 
-    if request.user.is_authenticated:
-        return redirect('home')
+    
+    form = UserRegistrationForm
 
-    else:
-        form = UserRegistrationForm
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
 
-        if request.method == 'POST':
-            form = UserCreationForm(request.POST)
-            if form.is_valid():
-                form.save()
+            # for getting Username for messages
 
-                # for getting Username for messages
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Accoutn is created successfully for ' + user)
+            return redirect('login')
 
-                user = form.cleaned_data.get('username')
-                messages.success(request, 'Accoutn is created successfully for ' + user)
-                return redirect('login')
+    context = {
 
-        context = {
+        'form':form
 
-            'form':form
+    }
 
-        }
-
-        return render(request, 'accounts/registrationpage.html', context)
+    return render(request, 'accounts/registrationpage.html', context)
 
 
     
-
+@unauthenticated_user
 def loginUser(request):
 
-    if request.user.is_authenticated:
-        return redirect('home')
+    
 
-    else:
+    if request.method == 'POST':
+        username= request.POST.get('username')
+        password = request.POST.get('password')
 
-        if request.method == 'POST':
-            username= request.POST.get('username')
-            password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
 
-            user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('home')
 
-            if user is not None:
-                login(request,user)
-                return redirect('home')
+        else:
+            messages.info(request,'Username or password is incorrect')
 
-            else:
-                messages.info(request,'Username or password is incorrect')
-
-        context = {
+    context = {
 
 
-        }
+    }
 
-        return render(request, 'accounts/loginpage.html', context)
+    return render(request, 'accounts/loginpage.html', context)
 
 
     

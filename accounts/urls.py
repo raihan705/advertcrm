@@ -9,6 +9,8 @@ urlpatterns = [
 
     path('',views.home, name ='home'),
 
+    path('user',views.userpage, name= 'userpage'),
+
     path('products',views.products, name ='products'),
 
     path('customer/<str:customer_pk>',views.customer, name ='customer'),
